@@ -1,0 +1,112 @@
+
+<!-- Please see the Javascript Pane for copyright and licensing notices -->
+<a href="https://www.programmableweb.com" target="_newtab"><img src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/163318/pw-logo.png'></a>
+<p>This ProgrammableWeb PlayPen is a very basic example of how to query the <a href="https://www.programmableweb.com/api/youtube-data" target="_newtab">YouTube Data API</a>. It is the first iteration of what will probably be a three-step iteration towards a more likely use-case. In this code-sample, we simply feed the API the ID# of a YouTube playlist that we happen to know about. We harvested the ID of that playlist from YouTube's public facing link for it. However, we'lll be the first one's to acknowledge that this is not a practical use case. But it's enough to get your feet wet with a simple call to one of the YouTube Data API resources (the /playlistItems resource). This code also borrows from another <a href="https://www.programmableweb.com/news/how-to-hide-api-keys-html5-storage-public-code-samples/how-to/2018/01/17" target="_newtab">ProgrammableWeb tutorial</a> (and accompanying <a href="https://codepen.io/ProgrammableWeb/pen/MrPzpg" target="_newtab">PlayPen</a>) which demonstrates how to operationalize sample code that needs to hide any API keys from public view.</p>
+<p>Click here to view the matching tutorial on <a href="https://www.programmableweb.com" target="_newtab">ProgrammableWeb</a></p>
+<p><h4>Code Sample PlayPen (Tutorial Companion)</h4></p>
+    <p><button id="showPlayList">Show Play List</button>
+    <button id="clearList">Clear Play List</button>
+    <button id="getAPIKey">Input API Key</button>
+    <button id="showKey">Display API Key</button>
+    <button id="wipeKeyDisplay">Wipe Key Display</button>
+    <button id="clearLocalStorage">Clear Key in HTML5 Storage</button></p>
+    <div id="div1"></div>
+    <div id="div2"></div>
+    <div id="playListContainer"></div>
+  <!-- 
+    ## if you're not running in CodePen, make sure
+    ## this HTML sources your local Javascript source
+    ## code as well as jquery. Maybe something like this:
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/main.js"></script>  
+  -->
+
+<script type="text/javascript">
+  var youTubeUserName = "wendells78";  // room for improvement: add a button that prompts for the YouTube Channel name
+  var apiKey = null;
+  var localChannelId = "UCqAPMBrOBk9mMwuJDoK4gAg";
+
+  var showPlayListButton  = document.querySelector("#showPlayList");       // button begins workflow that retrieves playlist(s) user
+  var getAPIKeybutton     = document.querySelector("#getAPIKey");          // button gets API key from end user
+  var displayAPIKeyButton = document.querySelector("#showKey");            // button displays the API key if it exists in local HTML5 storage
+  var clearAPIKeyButton   = document.querySelector("#wipeKeyDisplay");     // button clears display of API key
+  var clearStorageButton  = document.querySelector("#clearLocalStorage");  // button is for clearing API key stored in HTML5 storage
+  var clearPlaylistButton = document.querySelector("#clearList");          // button to clear the page of a pre-existng list
+
+  clearStorageButton.addEventListener("click", function() {
+    localStorage.removeItem('storedApiKey');                   // take API key out of local HTML5 storage
+    $("#playListContainer").empty();                           // clear the playlist (using jquery) since you probably should do that
+    document.getElementById("div1").innerHTML = "";            // clear the API key (using good 'ole JS) if it's being displayed
+  });
+
+  clearPlaylistButton.addEventListener("click", function() {
+    $("#div2").empty();
+    $("#playListContainer").empty();                           // use jquery to clear the playlist divs 
+  });
+
+  displayAPIKeyButton.addEventListener("click", function() {
+    if (localStorage.getItem("storedApiKey")) {                                           // content in the HTML5 storage field for API key?
+       document.getElementById("div1").innerHTML = localStorage.getItem("storedApiKey");  // true=display what's in HTML5 storage
+    } else {
+       document.getElementById("div1").innerHTML = "No API Key in Storage";               // false=different message
+    }   
+  });
+
+  clearAPIKeyButton.addEventListener("click", function() {
+    document.getElementById("div1").innerHTML = "";         // set div that displays API key to blank.
+  });
+
+  // For the purposes of sharing this code publicly, we really don't want to hard-code an API key into the code
+  // So, what we do is we ask the user for their api key and then pass that along as a way to not have the API key shown in code
+  // The inspiration for this comes from the article at:
+  // https://www.programmableweb.com/news/how-to-hide-api-keys-when-building-web-apps-codepen/how-to/2017/08/14
+
+  getAPIKeybutton.addEventListener("click", function() {
+      apiKey = prompt("Enter API Key:");                    // get YouTube API Key from user
+      if (apiKey) {                                         // if the user entered something.
+         document.getElementById("div1").innerHTML = "";    // if an API key was already displaying, clear it
+         localStorage.setItem("storedApiKey", apiKey);      // store locally in HTML5 storage
+      }
+  });
+
+  showPlayListButton.addEventListener("click", function() {
+                                                            // double check local HTML5 storage for API key stored during previous run
+    if (!localStorage.getItem("storedApiKey")) {            // if undefined, prompt user for key and store in local storage      
+      localStorage.setItem("storedApiKey", prompt("Enter API Key:"));
+    }   // endif !apikey 
+   
+  //  The code below calls the YouTube Data API's /playlistItems resource under the assumption that you already 
+  //  know the playlist title and playlist ID. We could have just avoided building the getVids subroutine. But
+  //  the next iteration of this code will cycle through all the playlists associated with a YouTube channel and
+  //  call the getVids routine for each one. In that iteration, we will demonstration how to call other YouTube
+  //  data API resources in order to determine all the playlist IDs assocated with a YouTube channel.
+    
+    $(document).ready(function(){
+                 getVids("Karaoke Play List", "PLfHByg2esTuIuuHC2rLY7aCCP0yKn9622"); 
+    });                  
+    
+    function getVids(playListTitle,playListID) {
+      $.get(
+        "https://www.googleapis.com/youtube/v3/playlistItems", {
+          part: "snippet",
+          maxResults: 20,
+          playlistId: playListID,
+          key: localStorage.getItem("storedApiKey") },
+          function(data) {
+             var output;
+             $("#playListContainer").append("<strong>Playlist: <a href='http://www.youtube.com/playlist/?="
+           + playListID +"' target = '_newtab'>"+playListTitle + "</a></strong><ul>");      // paint title of playlist on web page
+             $.each(data.items, function(i, item) {                                         // cycle through playlist
+                videoTitle = item.snippet.title;
+                output = "<li><a href='https://www.youtube.com/watch?v="
+              + item.snippet.resourceId.videoId 
+              + "' target='_newtab'>"+ videoTitle + "</a></li>";         // craft HTML
+                $("#playListContainer").append(output);                  // append crafted HTML to results list
+             });                                                         // end $.each
+             $("#playListContainer").append("</ul><br />");              // finish painting of HTML unstructured list
+          }  // end callback function from /playlistItems resource API call
+       );    // end API call to /playlistItems resource
+     }       // end getVids function
+  });        // end of getAPIkeyButton.addEventListener
+
+</script>

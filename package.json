@@ -1,0 +1,45 @@
+{
+  "name": "polygon-next",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@magic-ext/oauth": "^1.0.0",
+    "@nomiclabs/hardhat-ethers": "^2.0.2",
+    "@nomiclabs/hardhat-waffle": "^2.0.1",
+    "@openzeppelin/contracts": "^4.2.0",
+    "@reduxjs/toolkit": "^1.7.1",
+    "@toruslabs/torus-embed": "^1.19.0",
+    "@walletconnect/client": "^1.7.0",
+    "@walletconnect/web3-provider": "^1.7.0",
+    "axios": "^0.21.1",
+    "ethereum-waffle": "^3.4.0",
+    "ethereumjs-abi": "^0.6.8",
+    "ethers": "^5.5.2",
+    "hardhat": "^2.8.0",
+    "ipfs-http-client": "50.1.2",
+    "keccak": "^3.0.2",
+    "magic-sdk": "^7.0.0",
+    "next": "11.0.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-redux": "^7.2.6",
+    "react-toastify": "^8.1.0",
+    "reactjs-popup": "^2.0.5",
+    "web3": "^1.6.1",
+    "web3modal": "^1.9.3"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "eslint": "7.29.0",
+    "eslint-config-next": "11.0.1",
+    "postcss": "^8.3.5",
+    "style.css": "^1.0.0",
+    "tailwindcss": "^2.2.4"
+  }
+}

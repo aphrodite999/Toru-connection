@@ -1,0 +1,23 @@
+/* ./styles/globals.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.dropdown:hover .dropdown-menu {
+    display: block;
+}
+.Toastify__toast-body {
+    word-wrap: break-word !important;
+    
+}
+.Toastify__toast-body > div:last-child {
+    flex: 1;
+    padding-right : 15px !important;
+    max-width : 265px !important;
+    word-wrap: break-word;
+}
+
+
+
+
+

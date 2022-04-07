@@ -1,0 +1,54 @@
+@tail-wind global;
+
+.logos{ 
+    width: 15vw !important;
+}
+
+.picture:hover {
+    cursor: pointer;
+}
+
+.channel-body {
+    display: flex;
+}
+
+.section {
+    width: 50%;
+    padding: 0 auto;
+    padding-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-item:hover {
+    cursor: pointer;
+}
+
+.channel-footer {
+    margin-top: 150px;
+
+}
+
+.oauth-btn {
+    width: 200px;
+    height: 40px;
+    margin: 0 auto;
+    border-radius: 4px;
+    font-size: 18px;
+    letter-spacing: 5%;
+    color: grey;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.active {
+    color: white;
+    background-color: #4f46e5;
+}
+
+.active:hover {
+    cursor: pointer;
+    background-color: #473fe0;
+}
